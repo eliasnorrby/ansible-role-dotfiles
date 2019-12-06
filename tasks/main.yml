@@ -1,10 +1,10 @@
 ---
 - name: clone dotfiles
   git:
-    repo: https://github.com/eliasnorrby/dotfiles
+    repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles }}"
-    version: develop
-  tags: never
+    version: "{{ dotfiles_version }}"
+  tags: never,test
 
 - debug:
     msg: "not really cloning"
