@@ -36,6 +36,11 @@
     - set_fact:
         absent_topics: "{{ q('dict', topics) | map(attribute='value') | list | flatten | selectattr('state', 'equalto', 'absent') | list }}"
 
+- name: user should have a dotfiles_data directory
+  file:
+    path: "{{ dotfiles_data }}"
+    state: directory
+
 - include_tasks: links.yml
   loop: "{{ present_topics }}"
   loop_control:
