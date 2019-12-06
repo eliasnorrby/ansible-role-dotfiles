@@ -1,10 +1,15 @@
 ---
+- name: check if dotfiles folder exists
+  stat:
+    path: "{{ dotfiles }}"
+  register: dotfiles_dir
+
 - name: clone dotfiles
   git:
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles }}"
     version: "{{ dotfiles_version }}"
-  tags: never,test
+  when: dotfiles_dir.stat.isdir is not defined
 
 - debug:
     msg: "not really cloning"
