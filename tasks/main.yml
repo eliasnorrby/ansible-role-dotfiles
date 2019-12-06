@@ -1,0 +1,42 @@
+---
+- name: clone dotfiles
+  git:
+    repo: https://github.com/eliasnorrby/dotfiles
+    dest: "{{ dotfiles }}"
+    version: develop
+  tags: never
+
+- debug:
+    msg: "not really cloning"
+
+- name: collect topic configs
+  block:
+    - find:
+        path: "{{ dotfiles }}"
+        patterns: "config.yml"
+        file_type: file
+        recurse: yes
+      register: find_results
+      tags: ["never"]
+    - set_fact:
+        configs: "{{ find_results.files | map(attribute='path') | list }}"
+      tags: ["never"]
+    - include_vars: "{{ item }}"
+      loop: "{{ configs }}"
+      tags: ["never"]
+    # Already matched?
+    # include_vars: "{{ item }}"
+    #   with_fileglob:
+    #     - "{{ dotfiles }}/config.yml"
+    #   tags: ["never"]
+    - set_fact:
+        present_topics: "{{ q('dict', topics) | map(attribute='value') | list | flatten | selectattr('state', 'equalto', 'present') | list }}"
+    - set_fact:
+        disabled_topics: "{{ q('dict', topics) | map(attribute='value') | list | flatten | selectattr('state', 'equalto', 'disabled') | list }}"
+    - set_fact:
+        absent_topics: "{{ q('dict', topics) | map(attribute='value') | list | flatten | selectattr('state', 'equalto', 'absent') | list }}"
+
+- include_tasks: links.yml
+  loop: "{{ present_topics | selectattr('links', 'defined') | list }}"
+  loop_control:
+    loop_var: topic

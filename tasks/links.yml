@@ -1,0 +1,22 @@
+---
+- block:
+    - name: link topic
+      debug:
+        msg: "linking {{ dotfiles + '/' + topic.path }} to {{ topic_data_path }}"
+    - name: do it
+      file:
+        src: "{{ dotfiles + '/' + topic.path }}"
+        dest: "{{ topic_data_path }}"
+        state: link
+
+    - name: link files
+      debug:
+        msg: "linking {{ topic_data_path + '/' + item.src }} to {{ item.dest | regex_replace('/$', '/' + item.src) }}"
+      # file:
+      #   path: "{{ item.src }}"
+      #   dest: "{{ item.dest | regex_replace('/$', '/' + item.src) }}"
+      #   state: link
+      when: topic.links is defined
+      loop: "{{ topic.links }}"
+  vars:
+    topic_data_path: "{{ dotfiles_data + '/' + (topic.path | replace('/', '.')) + '.topic' }}"
