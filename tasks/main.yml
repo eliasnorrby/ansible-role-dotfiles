@@ -9,10 +9,8 @@
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles }}"
     version: "{{ dotfiles_version }}"
+  # safety for running locally with a more recent version
   when: dotfiles_dir.stat.isdir is not defined
-
-- debug:
-    msg: "not really cloning"
 
 - name: collect topic configs
   block:
@@ -29,11 +27,6 @@
     - include_vars: "{{ item }}"
       loop: "{{ configs }}"
       tags: never, modular
-    # Already matched?
-    # include_vars: "{{ item }}"
-    #   with_fileglob:
-    #     - "{{ dotfiles }}/config.yml"
-    #   tags: ["never"]
     - set_fact:
         present_topics: "{{ q('dict', topics) | map(attribute='value') | list | flatten | selectattr('state', 'equalto', 'present') | list }}"
     - set_fact:
