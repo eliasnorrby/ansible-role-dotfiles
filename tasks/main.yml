@@ -14,19 +14,32 @@
 
 - name: collect topic configs
   block:
+    # Recursively search for 'config.yml's in dotfiles repository
     - find:
         path: "{{ dotfiles }}"
         patterns: "config.yml"
         file_type: file
         recurse: true
       register: find_results
-      tags: never, modular
     - set_fact:
         configs: "{{ find_results.files | map(attribute='path') | list }}"
-      tags: never, modular
-    - include_vars: "{{ item }}"
+    # Just include them if we're running locally
+    - include_vars:
+        file: "{{ item }}"
       loop: "{{ configs }}"
-      tags: never, modular
+      when: ansible_connection == 'local'
+    # Otherwise, fetch them to a temporary location before sourcing
+    - block:
+        - fetch:
+            src: "{{ item }}"
+            dest: "{{ local_config_dir }}"
+          loop: "{{ configs }}"
+        - include_vars:
+            dir: "{{ local_config_dir }}"
+      when: ansible_connection != 'local'
+      vars:
+        local_config_dir: /tmp/dotfile_configs
+
     - set_fact:
         present_topics: "{{ q('dict', topics) | map(attribute='value') | list | flatten | selectattr('state', 'equalto', 'present') | list }}"
     - set_fact:
