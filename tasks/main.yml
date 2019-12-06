@@ -20,7 +20,7 @@
         path: "{{ dotfiles }}"
         patterns: "config.yml"
         file_type: file
-        recurse: yes
+        recurse: true
       register: find_results
       tags: never, modular
     - set_fact:

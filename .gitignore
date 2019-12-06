@@ -11,3 +11,5 @@ htmlcov
 *.retry
 */__pycache__
 *.pyc
+
+plan.org
