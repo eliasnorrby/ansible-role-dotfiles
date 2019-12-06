@@ -17,13 +17,13 @@
         file_type: file
         recurse: yes
       register: find_results
-      tags: ["never"]
+      tags: never, modular
     - set_fact:
         configs: "{{ find_results.files | map(attribute='path') | list }}"
-      tags: ["never"]
+      tags: never, modular
     - include_vars: "{{ item }}"
       loop: "{{ configs }}"
-      tags: ["never"]
+      tags: never, modular
     # Already matched?
     # include_vars: "{{ item }}"
     #   with_fileglob:
@@ -37,6 +37,6 @@
         absent_topics: "{{ q('dict', topics) | map(attribute='value') | list | flatten | selectattr('state', 'equalto', 'absent') | list }}"
 
 - include_tasks: links.yml
-  loop: "{{ present_topics | selectattr('links', 'defined') | list }}"
+  loop: "{{ present_topics }}"
   loop_control:
     loop_var: topic
