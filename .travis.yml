@@ -26,5 +26,12 @@ script:
   - ansible-playbook tests/test.yml -i tests/inventory --tags "all,test" --syntax-check
   # Full run
   - ansible-playbook tests/test.yml -i tests/inventory --tags "all,test" -v
-# notifications:
-#   webhooks: https://galaxy.ansible.com/api/v1/notifications/
+
+notifications:
+  slack:
+    rooms:
+      secure: exzAUeEll2G62sAiEU4WhnZfrR75aQTAy2a0aPI26TjD3yrfrHEecTteymRjy2+VnDi4GPWFhNhFsHiEJPur6Ua+U7tnoQLfaZaA2kKxWEzSJQbUVxEpvtRWglEGg3W+cQEZFIgiweISbXh+9PeEeZPnbopOd/BWTs2hxGyE6Hirs9i92FcaWxedcfRRjk7G0CyYSJiZjwrDIY78gMwilWMPjTt8v/gE/wn8BnI6iT62KmYilR7nosa8TRjaAMCCp5lSg3QjHwgEpEf9LQsATAWuaUbFDLb0xZFm4gika1cXmZw+QLPvLm3nsREf0b8LZHwIouT8wJsbDBiIV2852t1VOlKOtRl2cJgpn6h/r6Oa9IwqWeUeURksx+9wZ+XN6xNltJiv4dk5nt+3oQ5EKkYnHKByf0WhJqhrwpJQYlvh/OEZhpMFvehm9RAOLwowxJFFk8Q/ZF6pBeTcsDJwmn2LCKbkyNXV2X5hEwY99IoFXUIZyT6iHjlJhJuvJ9dqvuXp65MNheD4PKiJkvbKsWtSSNzyMHfmlirkw+eQmk0ovuLEpXiZYfWa3M5c+EPj+3s0o7Hw2itveGD20H/Bim2g8Tv2bLJ73xNa6b2mSPXw+Vuk1tRh/5I+cDHg0odjSoeOp3YRevoDWzIiEfHz8iycWnOqMC6S5OvH67t1Gjs=
+    template:
+      - "Build <%{build_url}|%{result}> for %{repository_slug}@%{branch} (<%{compare_url}|%{commit}>)"
+    on_success: change
+    on_failure: always
