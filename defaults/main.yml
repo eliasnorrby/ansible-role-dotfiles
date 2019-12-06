@@ -21,15 +21,6 @@ topics:
           - vim
         links:
           - .vimrc
-    - name: emacs
-      state: present
-      config:
-        path: editor/emacs
-        brew_taps:
-          - d12frosted/emacs-plus
-        brew_formulas:
-          - name: emacs-plus
-            # install_options: without-spacemacs-icon
   shell:
     - name: zsh
       state: present
