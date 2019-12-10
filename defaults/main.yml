@@ -8,7 +8,7 @@ xdg_data_home: "~/.local/share"
 xdg_bin_home: "~/.local/bin"
 
 dotfiles: "~/.dotfiles"
-dotfiles_version: "refactor"
+dotfiles_version: "develop"
 dotfiles_data: "{{ xdg_data_home }}/dotfiles"
 
 topics:
