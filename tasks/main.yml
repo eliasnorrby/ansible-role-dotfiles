@@ -41,10 +41,10 @@
         local_config_dir: /tmp/dotfile_configs
 
     - set_fact:
+        # to persist
+        topics: "{{ topics }}"
         present_topics: "{{ q('dict', topics) | map(attribute='value') | list | flatten | selectattr('state', 'equalto', 'present') | list }}"
-    - set_fact:
         disabled_topics: "{{ q('dict', topics) | map(attribute='value') | list | flatten | selectattr('state', 'equalto', 'disabled') | list }}"
-    - set_fact:
         absent_topics: "{{ q('dict', topics) | map(attribute='value') | list | flatten | selectattr('state', 'equalto', 'absent') | list }}"
 
 - name: user should have a dotfiles_data directory
@@ -52,6 +52,7 @@
     path: "{{ dotfiles_data }}"
     state: directory
 
+  # TODO: loop over absent / disabled topics as well, removing links if necessary
 - include_tasks: links.yml
   loop: "{{ present_topics }}"
   loop_control:
